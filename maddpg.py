@@ -108,11 +108,11 @@ if __name__ == '__main__':
     n_veh = 4
     n_neighbor = 1
     n_RB = n_veh
-    env = Environment_marl.Environ(n_veh, n_neighbor)
+    env = Environment_marl1.Environ(n_veh, n_neighbor)
     env.new_random_game()  # initialize parameters in env
 
     # n_episode = 3000
-    n_episode = 2000
+    n_episode = 100
     n_step_per_episode = int(env.time_slow / env.time_fast)  # 0.1/0.001 = 100
     epsi_final = 0.01  # 探索最终值          ##13
     epsi_anneal_length = int(0.8 * n_episode)  # 探索退火长度

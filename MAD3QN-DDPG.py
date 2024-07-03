@@ -11,10 +11,15 @@ from replay_memory import ReplayMemory
 from model_agent_maddpg import MADDPG
 import sys
 
+
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+# 定义TensorFlow配置
 my_config = tf.ConfigProto()
+# 配置GPU内存分配方式，按需增长，很关键
 my_config.gpu_options.allow_growth=True
+# 配置可使用的显存比例
+my_config.gpu_options.per_process_gpu_memory_fraction = 0.1
 
 class Agent(object):
     def __init__(self, memory_entry_size):
@@ -36,7 +41,7 @@ height = 1298/2
 IS_TRAIN = 1
 IS_TEST = 1-IS_TRAIN
 
-label = 'marl_model'
+label = 'MA2HDQN_model'
 
 n_veh = 4
 n_neighbor = 1
@@ -45,7 +50,7 @@ n_RB = n_veh
 env = Environment_marl.Environ(down_lanes, up_lanes, left_lanes, right_lanes, width, height, n_veh, n_neighbor)
 env.new_random_game()  # initialize parameters in env
 
-n_episode = 3000
+n_episode = 100
 n_step_per_episode = int(env.time_slow/env.time_fast)
 epsi_final = 0.02
 epsi_anneal_length = int(0.8*n_episode)
@@ -349,6 +354,7 @@ if IS_TRAIN:
     record_loss = np.asarray(record_loss).reshape((-1, n_veh*n_neighbor))
     loss_path = os.path.join(current_dir, "model/" + label + '/train_loss.mat')
     scipy.io.savemat(loss_path, {'train_loss': record_loss})
+
 
 
 # -------------- Testing --------------

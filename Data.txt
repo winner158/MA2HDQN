@@ -1,0 +1,21 @@
+-------- marl, MA2HDQN_model------
+n_veh: 4, n_neighbor: 1
+Sum V2I rate: 36.29878 Mbps
+Pr(V2V): 0.6725
+--------random ------------
+Rand Sum V2I rate: 37.04313 Mbps
+Rand Pr(V2V): 0.9075
+-------- marl, MA2HDQN_model------
+n_veh: 4, n_neighbor: 1
+Sum V2I rate: 36.29878 Mbps
+Pr(V2V): 0.6725
+--------random ------------
+Rand Sum V2I rate: 37.04313 Mbps
+Rand Pr(V2V): 0.9075
+-------- marl, MA2HDQN_model------
+n_veh: 4, n_neighbor: 1
+Sum V2I rate: 36.29878 Mbps
+Pr(V2V): 0.6725
+--------random ------------
+Rand Sum V2I rate: 37.04313 Mbps
+Rand Pr(V2V): 0.9075
