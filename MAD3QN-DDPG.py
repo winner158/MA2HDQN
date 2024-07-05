@@ -23,7 +23,7 @@ my_config.gpu_options.per_process_gpu_memory_fraction = 0.1
 
 class Agent(object):
     def __init__(self, memory_entry_size):
-        self.discount = 1
+        self.discount = 0.9
         self.double_q = True
         self.memory_entry_size = memory_entry_size
         self.memory = ReplayMemory(self.memory_entry_size)
@@ -41,7 +41,7 @@ height = 1298/2
 IS_TRAIN = 1
 IS_TEST = 1-IS_TRAIN
 
-label = 'MA2HDQN_model'
+label = 'MA2HDQN_model_learn_rate_adaptive'
 
 n_veh = 4
 n_neighbor = 1
@@ -50,7 +50,7 @@ n_RB = n_veh
 env = Environment_marl.Environ(down_lanes, up_lanes, left_lanes, right_lanes, width, height, n_veh, n_neighbor)
 env.new_random_game()  # initialize parameters in env
 
-n_episode = 100
+n_episode = 500
 n_step_per_episode = int(env.time_slow/env.time_fast)
 epsi_final = 0.02
 epsi_anneal_length = int(0.8*n_episode)
@@ -163,8 +163,14 @@ with g.as_default():
     q_acted = tf.reduce_sum(y * action_one_hot, reduction_indices=1, name='q_acted')
 
     g_loss = tf.reduce_mean(tf.square(g_target_q_t - q_acted), name='g_loss')
-    optim = tf.train.RMSPropOptimizer(learning_rate=0.001, momentum=0.95, epsilon=0.01).minimize(g_loss)
-
+    # fixed learning rate
+    # optim = tf.train.RMSPropOptimizer(learning_rate=0.0001, momentum=0.95, epsilon=0.01).minimize(g_loss)
+    # adaptive learning rate
+    lamda = tf.divide(g_loss, 0.012)
+    mincom = tf.minimum(tf.constant(10.00), tf.pow(lamda, 3))
+    maxcom = tf.maximum(mincom, 1)
+    learning_rate = tf.multiply(0.0001, maxcom)
+    optim = tf.train.RMSPropOptimizer(learning_rate=learning_rate, momentum=0.95, epsilon=0.01).minimize(g_loss)
     # ==================== Prediction network ========================
     x_p = tf.placeholder(tf.float32, [None, n_input])
 
